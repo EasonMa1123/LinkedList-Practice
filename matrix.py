@@ -1,11 +1,10 @@
 class matrix:
-    def __init__(self,x,y,arr = None):
-        if arr == None:
-            self.__arr = [[None]*x]*y
-        else:
-            self.__arr = arr
-        self.__x = x
-        self.__y = y
+    def __init__(self,arr):
+        
+        self.__arr = arr
+        self.__y = len(self.__arr)
+        self.__x = len(self.__arr[0])
+        self.__dim = f'{str(self.__x)} {str(self.__y)}'
 
     def row(self,x):
         return self.__arr[x]
@@ -35,7 +34,7 @@ class matrix:
                 mat[0][1] * mat[1][0]
         
         # Recursive case for larger matrices
-        res = 0
+        new_martix_list = 0
         for col in range(n):
         
             # Create a submatrix by removing the first 
@@ -55,9 +54,9 @@ class matrix:
             
             # Cofactor expansion
             sign = 1 if col % 2 == 0 else -1
-            res += sign * mat[0][col] * self.det(sub, n - 1)
+            new_martix_list += sign * mat[0][col] * self.det(sub, n - 1)
         
-        return res
+        return new_martix_list
     
     def x(self):
         return self.__x
@@ -65,30 +64,65 @@ class matrix:
     def y(self):
         return self.__y
     
-    def __dir__(self):
+    def matrix(self):
         return self.__arr
     
+    def dim(self):
+        return self.__dim
+    
 class matrixCalucation:
-    def __init__(self,mat1:matrix,mat2:matrix):
-        self.__mat1 = mat1
-        self.__mat2 = mat2
+    def __init__(self):
+        pass
 
-    def add(self):
-        new_matrix = []
-        if len(dir(self.__mat1))>len(dir(self.__mat2)):
-            new_matrix = dir(self.__mat1)
-            add_matrix =  self.__mat2
-        else:
-            add_matrix  = self.__mat1
-            new_matrix=  dir(self.__mat2)
+    def add(self,mat1:matrix,mat2:matrix):
+        if mat1.dim() != mat2.dim():
+            return -1
         
-        for i in range(add_matrix.x()):
-            for j in range(add_matrix.y()):
-                new_matrix[i][j] += dir(add_matrix)[i][j]
+        
+        new_martix_list = [[0 for _ in range(mat1.x())] for _ in range(mat1.y())]
+        for i in range(mat1.x()):
+            for j in range(mat1.y()):
+                
+                new_martix_list[i][j] = mat1.matrix()[i][j]+mat2.matrix()[i][j]
+                
 
-        return new_matrix
+        new_martix = matrix(new_martix_list)
+        return new_martix
+    
+    def minus(self,mat1:matrix,mat2:matrix):
+        if mat1.dim() != mat2.dim():
+            return -1
+        
+        
+        new_martix_list = [[0 for _ in range(mat1.x())] for _ in range(mat1.y())]
+        for i in range(mat1.x()):
+            for j in range(mat1.y()):
+                
+                new_martix_list[i][j] = mat1.matrix()[i][j]-mat2.matrix()[i][j]
+                
+
+        new_martix = matrix(new_martix_list)
+        return new_martix
+    
+    def multiply(self,mat1:matrix,mat2:matrix):
+        mat1_y = mat1.y()
+        mat1_x = mat1.x()
+        mat2_y = mat2.y()
+        mat2_x = mat2.x()
+
+        if mat1_x != mat2_y:
+            print("Invalid Input")
+            return None
+
+       
+        new_martix_list = [[0] * mat2_x for _ in range(mat1_y)]
 
         
+        for i in range(mat1_y):
+            for j in range(mat2_x):
+                for k in range(mat1_x):
+                    new_martix_list[i][j] += mat1.matrix[i][k] * mat2.matrix[k][j]
 
+        new_martix = matrix(new_martix_list)
 
-
+        return new_martix
