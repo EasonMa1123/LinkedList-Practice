@@ -69,6 +69,19 @@ class matrix:
     
     def dim(self):
         return self.__dim
+
+    def rotate(self):
+        
+    
+        # Create a result matrix of size n x m
+        res = [[0] * self.__y for _ in range(self.__x)]
+        
+        # Move mat[i][j] to res[j][m - i - 1]
+        for i in range(self.__y):
+            for j in range(self.__x):
+                res[j][self.__y - i - 1] = self.__arr[i][j]
+
+        self.__arr = res
     
 class matrixCalucation:
     def __init__(self):
