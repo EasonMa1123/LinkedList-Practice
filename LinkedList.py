@@ -33,6 +33,17 @@ class LinkedList:
         self.__listLength +=1
 
 
+    def addNode(self,node:node,index:int = None):
+        if index == None:
+            pre_node = self.__lastNode
+            pre_node.setNextNode(node)
+        else:
+            pre_node = self.getNode(index-1)
+            aft_node = self.getNode(index+1)
+            pre_node.setNextNode(node)
+            node.setNextNode(aft_node)
+        self.__listLength +=1
+
     def arrayLinkList(self):
         if self.__headNode == None:
             return -1
@@ -44,7 +55,7 @@ class LinkedList:
 
         return linklist_array
     
-    def listlen(self):
+    def __len__(self):
         return self.__listLength
     
 
@@ -206,6 +217,11 @@ class LinkedList:
     def swap(self,index1:int,index2:int):
         if index1 > self.__listLength or index2 > self.__listLength or index1 > index2:
             return -1
+        if self.getNode(index1) == self.__headNode and self.getNode(index2) == self.__lastNode:
+            aft_headnode = self.__lastNode
+            aft_lastnode = self.__headNode
+            self.__headNode = aft_lastnode
+            self.__lastNode = aft_headnode
         elif index2-index1 > 1:  
             node1 = self.getNode(index1)
             node1_pre = self.getNode(index1-1)
