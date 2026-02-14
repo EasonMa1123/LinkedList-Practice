@@ -1,43 +1,41 @@
 class queue:
-    def __init__(self,size):
-        self.__arr = [None]*size
+    def __init__(self, size):
+        self.__arr = [None] * size
         self.__size = size
-        self.__headPointerPosition = 0
-        self.__endPointerPosition = 0
+        self.__head = 0
+        self.__tail = 0
+        self.__count = 0
 
-
-    def append(self,value):
+    def append(self, value):
+        if self.__count == self.__size:
+            return -1  # overflow
         
-        if self.__endPointerPosition<self.__size:
-            self.__arr[self.__endPointerPosition] = value
-            self.__endPointerPosition +=1
+        self.__arr[self.__tail] = value
+        self.__tail = (self.__tail + 1) % self.__size
+        self.__count += 1
 
-        else:
-            return -1
-        
     def dequeue(self):
-        if len(self.__arr) == 0:
-            return -1
-        else:
-            item = self.__arr[self.__headPointerPosition]
-            self.__arr[self.__headPointerPosition] = None
-            for i in range(self.__size):
-                if i+1 < self.__size:
-                    self.__arr[i] = self.__arr[i+1]
-                    
-                elif i+1 == self.__size:
-                    self.__arr[i] = None
-                    self.__endPointerPosition -=1
-            return item
+        if self.__count == 0:
+            return -1  # underflow
         
+        item = self.__arr[self.__head]
+        self.__arr[self.__head] = None
+        self.__head = (self.__head + 1) % self.__size
+        self.__count -= 1
+        return item
+
+    def isEmpty(self):
+        return self.__count == 0
+
     def printQueue(self):
         return self.__arr
-    
-    def getTail(self):
-        if self.__endPointerPosition < self.__size:
-            return self.__arr[self.__endPointerPosition]
-        else:
-            return "Overflow"
 
     def getHead(self):
-        return self.__arr[self.__headPointerPosition]
+        if self.__count == 0:
+            return None
+        return self.__arr[self.__head]
+
+    def getTail(self):
+        if self.__count == 0:
+            return None
+        return self.__arr[(self.__tail - 1) % self.__size]
