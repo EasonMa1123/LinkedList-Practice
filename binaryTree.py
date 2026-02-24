@@ -189,7 +189,41 @@ class Tree:
         return max(ldepth, rdepth) + 1
 
     def remove(self,value):
-        temp_tree = Tree()
-        temp_tree.addNodeObject(self.getNode(value))
-        max_value = temp_tree.InOrderPrintTree()[-1]
-        
+        self.__root, removed = self.__remove_node(self.__root, value)
+        return removed
+
+    def __remove_node(self, node, value):
+        if node is None:
+            return None, False
+
+        if value < node.getValue():
+            updated_left, removed = self.__remove_node(node.getLeft(), value)
+            node.left(updated_left)
+            return node, removed
+
+        if value > node.getValue():
+            updated_right, removed = self.__remove_node(node.getRight(), value)
+            node.right(updated_right)
+            return node, removed
+
+        # Node found: 0 or 1 child
+        if node.getLeft() is None:
+            return node.getRight(), True
+        if node.getRight() is None:
+            return node.getLeft(), True
+
+        # Node with 2 children: replace with inorder successor
+        successor_parent = node
+        successor = node.getRight()
+
+        while successor.getLeft() is not None:
+            successor_parent = successor
+            successor = successor.getLeft()
+
+        # Remove successor from its old location
+        if successor_parent != node:
+            successor_parent.left(successor.getRight())
+            successor.right(node.getRight())
+
+        successor.left(node.getLeft())
+        return successor, True
