@@ -1,3 +1,7 @@
+import heapq
+from collections import deque
+
+
 class edge:
     def __init__(self, node_head=None, node_tail=None, weight=0):
         self.__nodeHead = None
