@@ -73,10 +73,12 @@ class graph:
             return
 
         visited = set()
-        bfs_queue = deque([self.__startingNode])
+        bfs_queue = [self.__startingNode]
+        queue_index = 0
 
-        while bfs_queue:
-            current = bfs_queue.popleft()
+        while queue_index < len(bfs_queue):
+            current = bfs_queue[queue_index]
+            queue_index += 1
 
             if current in visited:
                 continue
@@ -200,27 +202,32 @@ class graph:
 
         distances = {start_node: 0}
         previous = {}
-        min_heap = [(0, id(start_node), start_node)]
+        unvisited = list(self.__iter_nodes() or [])
 
-        while min_heap:
-            current_distance, _, current_node = heapq.heappop(min_heap)
+        while unvisited:
+            current_node = min(
+                unvisited,
+                key=lambda current: distances.get(current, float("inf")),
+            )
 
-            if current_distance > distances.get(current_node, float("inf")):
-                continue
+            current_distance = distances.get(current_node, float("inf"))
+            if current_distance == float("inf"):
+                break
+
+            unvisited.remove(current_node)
 
             if current_node is end_node:
                 break
 
             for connected_edge in current_node.getEdges():
                 neighbor = connected_edge.getNeighbor(current_node)
-                if neighbor is None:
+                if neighbor is None or neighbor not in unvisited:
                     continue
 
                 candidate_distance = current_distance + connected_edge.getWeight()
                 if candidate_distance < distances.get(neighbor, float("inf")):
                     distances[neighbor] = candidate_distance
                     previous[neighbor] = current_node
-                    heapq.heappush(min_heap, (candidate_distance, id(neighbor), neighbor))
 
         if end_node not in distances:
             return [], float("inf")
